@@ -28,5 +28,5 @@ jobs:
           
           # gh release create コマンドでリリースを作成
           gh release create $TAG_NAME \
-            --title "マインスイーパー $TAG_NAME" \
+            --title "$TAG_NAME" \
             --generate-notes
