@@ -1,27 +1,14 @@
-from minesweeper import Minesweeper
 from game_ui import MinesweeperUI
 
 def main():
-    # ゲームの難易度設定
-    # 初級: 9x9のグリッド、10個の地雷
-    # 中級: 16x16のグリッド、40個の地雷
-    # 上級: 16x30のグリッド、99個の地雷
-    
-    # ここでは初級レベルで設定
-    width = 9
-    height = 9
-    mines = 10
-    
-    # ゲームインスタンスを作成
-    game = Minesweeper(width, height, mines)
-    
-    # UIを作成して起動
-    ui = MinesweeperUI(game)
+    # UIインスタンスを作成して起動（初期状態ではゲームなし）
+    ui = MinesweeperUI()
     
     print("マインスイーパーを起動しました！")
+    print("起動時に難易度を選択できます")
     print("左クリック: セルを開く")
     print("右クリック: フラグを立てる/取り除く")
-    print("ウィンドウを閉じるとゲームを終了します")
+    print("ゲーム終了後は再スタートボタンで難易度選択画面に戻れます")
     
     ui.start()
 
