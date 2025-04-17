@@ -45,7 +45,37 @@ class Minesweeper:
     
     def reveal(self, x, y):
         # すでに公開済みまたはゲーム終了時は何もしない
-        if self.revealed[y][x] or self.game_over or self.flagged[y][x]:
+        if self.game_over:
+            return
+            
+        # すでに公開済みの場合、数字セルの場合は周囲のチェックを行う
+        if self.revealed[y][x]:
+            # 数字が0より大きい場合のみチェック
+            if self.board[y][x] > 0:
+                # 周囲のフラグ数をカウント
+                flag_count = 0
+                for dy in [-1, 0, 1]:
+                    for dx in [-1, 0, 1]:
+                        nx, ny = x + dx, y + dy
+                        if (0 <= nx < self.width and 
+                            0 <= ny < self.height and 
+                            self.flagged[ny][nx]):
+                            flag_count += 1
+                
+                # 数字とフラグ数が一致する場合、フラグ以外の周囲のセルを開放
+                if flag_count == self.board[y][x]:
+                    for dy in [-1, 0, 1]:
+                        for dx in [-1, 0, 1]:
+                            nx, ny = x + dx, y + dy
+                            if (0 <= nx < self.width and 
+                                0 <= ny < self.height and 
+                                not self.revealed[ny][nx] and
+                                not self.flagged[ny][nx]):
+                                self.reveal(nx, ny)
+            return
+        
+        # フラグが立ってる場合は何もしない
+        if self.flagged[y][x]:
             return
         
         # セルを公開
