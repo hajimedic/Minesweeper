@@ -1,0 +1,32 @@
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - 'v*' # vで始まるタグがプッシュされたときに実行（例：v0.1.0, v1.0.0）
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # すべての履歴を取得
+
+      # GitHub CLIはUbuntuランナーにプリインストールされているため、別途インストール不要
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # タグ名を取得
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          
+          # gh release create コマンドでリリースを作成
+          gh release create $TAG_NAME \
+            --title "マインスイーパー $TAG_NAME" \
+            --generate-notes
