@@ -14,9 +14,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install yq
-        run: sudo apt-get update && sudo apt-get install -y yq
+        uses: mikefarah/yq-action@v8
 
       - name: Read version from version.yaml
         id: version_reader
@@ -37,7 +39,6 @@ jobs:
             echo "Tag ${{ steps.tag_constructor.outputs.tag_name }} does not exist. Proceeding to create."
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
-        continue-on-error: true # If git tag -l fails (e.g. no tags yet), don't fail the workflow
 
       - name: Configure Git user
         if: steps.check_tag.outputs.exists == 'false'
