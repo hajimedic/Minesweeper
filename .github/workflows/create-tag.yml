@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install yq
-        uses: mikefarah/yq-action@v8
+        uses: mikefarah/yq@master
 
       - name: Read version from version.yaml
         id: version_reader
