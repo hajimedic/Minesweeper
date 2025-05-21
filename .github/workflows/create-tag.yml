@@ -1,0 +1,56 @@
+name: Create Tag from version.yaml
+
+on:
+  push:
+    branches:
+      - main  # Or your default branch
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push tags
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install yq
+        uses: mikefarah/yq-action@v8
+
+      - name: Read version from version.yaml
+        id: version_reader
+        run: echo "version=$(yq -r '.version' version.yaml)" >> $GITHUB_OUTPUT
+
+      - name: Construct tag name
+        id: tag_constructor
+        run: echo "tag_name=v${{ steps.version_reader.outputs.version }}" >> $GITHUB_OUTPUT
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          TAG_EXISTS=$(git tag -l "${{ steps.tag_constructor.outputs.tag_name }}")
+          if [ -n "$TAG_EXISTS" ]; then
+            echo "Tag ${{ steps.tag_constructor.outputs.tag_name }} already exists."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag ${{ steps.tag_constructor.outputs.tag_name }} does not exist. Proceeding to create."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Configure Git user
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push tag
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ steps.tag_constructor.outputs.tag_name }}"
+          git tag "$TAG_NAME" -m "Release $TAG_NAME"
+          git push origin "$TAG_NAME"
