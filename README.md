@@ -25,6 +25,14 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## テストの実行
+
+ゲームロジックのユニットテストには `pytest` を使用しています。以下のコマンドで実行できます：
+
+```bash
+pytest tests/
+```
+
 ## ゲームの操作方法
 
 - **左クリック**: セルを開く
@@ -50,4 +58,5 @@ python main.py
 - `game_ui.py` - ゲームのグラフィカルインターフェース
 - `main.py` - ゲームの実行ファイル
 - `requirements.txt` - 必要なPythonパッケージ
+- `tests/` - ユニットテスト（pytest）
 - `.github/workflows/` - GitHub Actions による自動リリース設定
