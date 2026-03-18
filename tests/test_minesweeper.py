@@ -12,7 +12,7 @@ def test_init():
 
 def test_place_mines():
     game = Minesweeper(width=10, height=10, mines=15)
-    
+
     mine_count = sum(1 for y in range(10) for x in range(10) if game.board[y][x] == -1)
     assert mine_count == 15
 
@@ -25,15 +25,15 @@ def test_calculate_numbers():
         [ 0,  0,  0]
     ]
     game.calculate_numbers()
-    
+
     assert game.board[0][0] == -1
     assert game.board[0][1] == 2
     assert game.board[0][2] == 1
-    
+
     assert game.board[1][0] == 2
     assert game.board[1][1] == -1
     assert game.board[1][2] == 1
-    
+
     assert game.board[2][0] == 1
     assert game.board[2][1] == 1
     assert game.board[2][2] == 1
@@ -51,13 +51,6 @@ def game_3x3_custom_board():
 
 def test_reveal_empty_cell():
     game = Minesweeper(width=5, height=5, mines=0)
-    game.board = [
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0]
-    ]
     game.reveal(2, 2)
     assert game.revealed[2][2] is True
     # 地雷がない場合、すべてが明らかになりクリアとなるはず
@@ -104,13 +97,14 @@ def test_toggle_flag_revealed_cell():
 def test_chord_reveal(game_3x3_custom_board):
     game_3x3_custom_board.reveal(1, 0) # 数字(1)のセルを開ける
     assert game_3x3_custom_board.revealed[0][1] is True
-    
+
     game_3x3_custom_board.toggle_flag(0, 0) # 地雷セルにフラグを立てる
-    
+
     # さらに同じ数字セル(1,0)を開くアクションでコード(周囲の一括展開)を実行
     game_3x3_custom_board.reveal(1, 0)
-    
+
     # 対象周囲のセルがすべて開かれることを確認
+    assert game_3x3_custom_board.revealed[0][0] is False # フラグを立てたセルは開かれない
     assert game_3x3_custom_board.revealed[0][2] is True
     assert game_3x3_custom_board.revealed[1][0] is True
     assert game_3x3_custom_board.revealed[1][1] is True
