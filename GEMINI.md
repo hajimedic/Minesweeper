@@ -17,3 +17,7 @@
     - 実装後は `pytest` によるテストが全てパスすることを確認すること。
 - **コミットメッセージ**: 
     - 変更内容が明確にわかるように、日本語で簡潔に記述すること。
+- **PRレビューの確認手順**: 
+    - PRにレビューコメントがついた際は、AIアシスタント自身が GitHub CLI (`gh`) コマンドを用いて内容を自律的に取得・対応すること。
+    - 例1 (全体コメントの確認): `gh pr view {pr_number} --comments`
+    - 例2 (コードごとの具体的な指摘の確認): `gh api repos/{owner}/{repo}/pulls/{pr_number}/comments | jq -r '.[] | "File: \(.path)\nLine: \(.line)\nComment: \(.body)\n---"'`
