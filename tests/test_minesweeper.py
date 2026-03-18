@@ -1,9 +1,4 @@
 import pytest
-import sys
-import os
-
-# プロジェクトルートディレクトリにパスを通す
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from minesweeper import Minesweeper
 
@@ -43,6 +38,17 @@ def test_calculate_numbers():
     assert game.board[2][1] == 1
     assert game.board[2][2] == 1
 
+@pytest.fixture
+def game_3x3_custom_board():
+    game = Minesweeper(width=3, height=3, mines=0)
+    # ランダムな配置を上書き
+    game.board = [
+        [-1,  1,  0],
+        [ 1,  1,  0],
+        [ 0,  0,  0]
+    ]
+    return game
+
 def test_reveal_empty_cell():
     game = Minesweeper(width=5, height=5, mines=0)
     game.board = [
@@ -61,29 +67,17 @@ def test_reveal_empty_cell():
     assert game.victory is True
     assert game.game_over is True
 
-def test_reveal_mine_game_over():
-    game = Minesweeper(width=3, height=3, mines=0)
-    game.board = [
-        [-1,  1,  0],
-        [ 1,  1,  0],
-        [ 0,  0,  0]
-    ]
-    game.reveal(0, 0)
-    assert game.revealed[0][0] is True
-    assert game.game_over is True
-    assert game.victory is False
+def test_reveal_mine_game_over(game_3x3_custom_board):
+    game_3x3_custom_board.reveal(0, 0)
+    assert game_3x3_custom_board.revealed[0][0] is True
+    assert game_3x3_custom_board.game_over is True
+    assert game_3x3_custom_board.victory is False
 
-def test_reveal_number_cell():
-    game = Minesweeper(width=3, height=3, mines=0)
-    game.board = [
-        [-1,  1,  0],
-        [ 1,  1,  0],
-        [ 0,  0,  0]
-    ]
-    game.reveal(1, 0)
-    assert game.revealed[0][1] is True
-    assert game.revealed[0][0] is False # 地雷は開かれない
-    assert game.game_over is False
+def test_reveal_number_cell(game_3x3_custom_board):
+    game_3x3_custom_board.reveal(1, 0)
+    assert game_3x3_custom_board.revealed[0][1] is True
+    assert game_3x3_custom_board.revealed[0][0] is False # 地雷は開かれない
+    assert game_3x3_custom_board.game_over is False
 
 def test_reveal_with_flag():
     game = Minesweeper(width=3, height=3, mines=0)
@@ -107,23 +101,17 @@ def test_toggle_flag_revealed_cell():
     game.toggle_flag(1, 1)
     assert game.flagged[1][1] is False # 開かれているセルにはフラグを設定できない
 
-def test_chord_reveal():
-    game = Minesweeper(width=3, height=3, mines=0)
-    game.board = [
-        [-1,  1,  0],
-        [ 1,  1,  0],
-        [ 0,  0,  0]
-    ]
-    game.reveal(1, 0) # 数字(1)のセルを開ける
-    assert game.revealed[0][1] is True
+def test_chord_reveal(game_3x3_custom_board):
+    game_3x3_custom_board.reveal(1, 0) # 数字(1)のセルを開ける
+    assert game_3x3_custom_board.revealed[0][1] is True
     
-    game.toggle_flag(0, 0) # 地雷セルにフラグを立てる
+    game_3x3_custom_board.toggle_flag(0, 0) # 地雷セルにフラグを立てる
     
     # さらに同じ数字セル(1,0)を開くアクションでコード(周囲の一括展開)を実行
-    game.reveal(1, 0)
+    game_3x3_custom_board.reveal(1, 0)
     
     # 対象周囲のセルがすべて開かれることを確認
-    assert game.revealed[0][2] is True
-    assert game.revealed[1][0] is True
-    assert game.revealed[1][1] is True
-    assert game.revealed[1][2] is True
+    assert game_3x3_custom_board.revealed[0][2] is True
+    assert game_3x3_custom_board.revealed[1][0] is True
+    assert game_3x3_custom_board.revealed[1][1] is True
+    assert game_3x3_custom_board.revealed[1][2] is True
