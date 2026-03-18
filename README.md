@@ -30,7 +30,7 @@ python main.py
 ゲームロジックのユニットテストには `pytest` を使用しています。以下のコマンドで実行できます：
 
 ```bash
-pytest tests/
+pytest
 ```
 
 ## ゲームの操作方法

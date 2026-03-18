@@ -40,13 +40,14 @@ def test_calculate_numbers():
 
 @pytest.fixture
 def game_3x3_custom_board():
-    game = Minesweeper(width=3, height=3, mines=0)
-    # ランダムな配置を上書き
+    game = Minesweeper(width=3, height=3, mines=0) # mines=0 to prevent random mines
+    # テスト用の盤面をセットアップ
     game.board = [
-        [-1,  1,  0],
-        [ 1,  1,  0],
-        [ 0,  0,  0]
+        [-1, 0, 0],
+        [ 0, 0, 0],
+        [ 0, 0, 0]
     ]
+    game.calculate_numbers()
     return game
 
 def test_reveal_empty_cell():
