@@ -68,8 +68,8 @@ def test_reveal_mine_game_over(game_3x3_custom_board):
     assert game_3x3_custom_board.victory is False
 
 def test_reveal_number_cell(game_3x3_custom_board):
-    game_3x3_custom_board.reveal(1, 0)
-    assert game_3x3_custom_board.revealed[0][1] is True
+    game_3x3_custom_board.reveal(0, 1)
+    assert game_3x3_custom_board.revealed[1][0] is True
     assert game_3x3_custom_board.revealed[0][0] is False # 地雷は開かれない
     assert game_3x3_custom_board.game_over is False
 
@@ -96,17 +96,17 @@ def test_toggle_flag_revealed_cell():
     assert game.flagged[1][1] is False # 開かれているセルにはフラグを設定できない
 
 def test_chord_reveal(game_3x3_custom_board):
-    game_3x3_custom_board.reveal(1, 0) # 数字(1)のセルを開ける
-    assert game_3x3_custom_board.revealed[0][1] is True
+    game_3x3_custom_board.reveal(0, 1) # 数字(1)のセルを開ける
+    assert game_3x3_custom_board.revealed[1][0] is True
 
     game_3x3_custom_board.toggle_flag(0, 0) # 地雷セルにフラグを立てる
 
-    # さらに同じ数字セル(1,0)を開くアクションでコード(周囲の一括展開)を実行
-    game_3x3_custom_board.reveal(1, 0)
+    # さらに同じ数字セル(0,1)を開くアクションでコード(周囲の一括展開)を実行
+    game_3x3_custom_board.reveal(0, 1)
 
     # 対象周囲のセルがすべて開かれることを確認
     assert game_3x3_custom_board.revealed[0][0] is False # フラグを立てたセルは開かれない
-    assert game_3x3_custom_board.revealed[0][2] is True
-    assert game_3x3_custom_board.revealed[1][0] is True
+    assert game_3x3_custom_board.revealed[0][1] is True
     assert game_3x3_custom_board.revealed[1][1] is True
-    assert game_3x3_custom_board.revealed[1][2] is True
+    assert game_3x3_custom_board.revealed[2][0] is True
+    assert game_3x3_custom_board.revealed[2][1] is True
